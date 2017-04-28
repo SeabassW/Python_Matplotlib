@@ -1,15 +1,20 @@
-import matplotlib.pyplot as pyplot 
+import matplotlib.pyplot as plt 
 import matplotlib.dates as mdates
-import numpy as numpy
+import numpy as np
 import urllib
+
+def bytespdate2num(fmt, encoding='utf-8'):
+	strconverter = mdates.strpdate2num(fmt)
+	def bytesconverter(b):
+		s = b.decode(encoding)
+		return strconverter(s)
+	return bytesconverter
 
 
 def graph_data(stock):
 
-	stock_price_url = 'http://chartapi.finance.yahoo.com/instrument/1.0/'+stock+'/chartdata;type=quote;range=10y/csv'﻿
-
+	stock_price_url = 'https://chartapi.finance.yahoo.com/instrument/1.0/'+stock+'/chartdata;type=quote;range=10y/csv'
 	source_code = urllib.request.urlopen(stock_price_url).read().decode()
-
 	stock_data = []
 	split_source = source_code.split('\n')
 
@@ -32,11 +37,11 @@ def graph_data(stock):
 															# 12-06-2014 = %m-%d-%Y
 															converters={0: bytespdate2num('%Y%m%d')})
 
-	plt.plot(x,y, label='loaded from csv')
+	plt.plot_date(date, close_p, '-', label='Price')
 
-	plt.xlabel('x')
-	plt.ylabel('y')
-
+	plt.xlabel('Date')
+	plt.ylabel('Price')
+	plt.legend()
 	plt.show()
 
 graph_data('TSLA')

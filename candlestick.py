@@ -1,11 +1,15 @@
-## Part 14 
+## Part 14, 17, 18
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.ticker as mticker
 from matplotlib.finance import candlestick_ohlc
+from matplotlib import style
 import numpy as np
 import urllib
 import datetime as dt
+
+style.use('ggplot')
+
 
 def bytespdate2num(fmt, encoding='utf-8'):
 	strconverter = mdates.strpdate2num(fmt)
@@ -56,11 +60,24 @@ def graph_data(stock):
 
 	candlestick_ohlc(ax1, ohlc, width=0.4, colorup='#77d879', colordown='#db3f3f')
 
+
 	for label in ax1.xaxis.get_ticklabels():
 		label.set_rotation(45)
 
 	ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
 	ax1.xaxis.set_major_locator(mticker.MaxNLocator(10))
+	ax1.grid(True)
+
+	## Apply text to graphs
+	font_dict = {'family': 'serif',
+				'color': 'darkred',
+				'size': 15}
+	ax1.text(date[5], close_p[1], 'Ebay Prices', font_dict)
+
+	## Apply annotation to graph
+	ax1.annotate('Bad news!', (date[11], high_p[11]), 
+				xytext=(0.8, 0.9), textcoords='axes fraction',
+				arrowprops = dict(facecolor='k', color='grey'))
 
 	#4: Apply plt 
 	plt.xlabel('Date')
